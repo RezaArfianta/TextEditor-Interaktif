@@ -91,4 +91,6 @@ infotypeQ sizeQ(Queue Q);
 void redoHuruf(List &kalimat, Stack &stackUndo, Stack &stackRedo);
 void undoHuruf(List &kalimat, Stack &stackUndo, Stack &stackRedo);
 
+int Menu();
+
 #endif // HEADER_H_INCLUDED
