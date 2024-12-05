@@ -3,39 +3,24 @@
 
 using namespace std;
 
-struct Elm;
-typedef Elm *adrList;
-
 struct ElmHuruf;
 typedef ElmHuruf *adrHuruf;
 
 struct ElmHuruf
 {
     char huruf;
+    adrHuruf prev;
     adrHuruf next;
 };
 
 struct ListHuruf
 {
     adrHuruf first;
-};
-struct Elm
-{
-    string info;
-    adrList next;
-    adrList prev;
-    adrHuruf huruf;
-};
-
-struct List
-{
-    adrList first;
-    adrList last;
-    adrList current;
+    adrHuruf last;
 };
 
 const int MAXSIZE = 4;
-typedef adrList infotypeS;
+typedef char infotypeS;
 typedef int index;
 struct Stack
 {
@@ -43,7 +28,7 @@ struct Stack
     index top;
 };
 
-typedef int infotypeQ;
+typedef char infotypeQ;
 struct ElmQueue;
 typedef ElmQueue *address;
 
@@ -59,24 +44,26 @@ struct Queue
     address head;
     address tail;
 };
-void printListSemua(List L);
-void createList(List &L);
-adrList createElm(string x);
-adrList createElm(string x);
-void insertFirst(List &L, adrList P);
-void insertLast(List &L, adrList P);
-void insertAfter(List &L, adrList P, adrList pred);
-void deleteFirst(List &L, adrList P);
-void deleteLast(List &L, adrList P);
-void deleteAfter(List &L, adrList P, adrList pred);
-void printList(List L);
-void printHuruf(List L);
+void printListSemua(ListHuruf L);
+void createList(ListHuruf &L);
+adrHuruf createElm(char x);
+void insertFirst(ListHuruf &L, adrHuruf P);
+void insertLast(ListHuruf &L, adrHuruf P);
+void insertAfter(ListHuruf &L, adrHuruf P, adrHuruf pred);
+void deleteFirst(ListHuruf &L, adrHuruf P);
+void deleteLast(ListHuruf &L, adrHuruf P);
+void deleteAfter(ListHuruf &L, adrHuruf P, adrHuruf pred);
+void printList(ListHuruf L);
+void printHuruf(ListHuruf L);
+adrHuruf cariCursor(ListHuruf L);
+void cursorGeserKiri(ListHuruf &L);
+void cursorGeserKanan(ListHuruf &L);
 
 void createStack(Stack &S);
 bool isEmptyS(Stack S);
 bool isFullS(Stack S);
-void push(Stack &S, List P);
-string Pop(Stack &stacks);
+void push(Stack &S, char P);
+void pop(Stack &stacks, char &P);
 infotypeS peek(Stack S);
 int sizeS(Stack S);
 void printStack(Stack S);
@@ -88,7 +75,7 @@ void dequeue(Queue &Q, address P);
 address front(Queue Q);
 infotypeQ sizeQ(Queue Q);
 
-void redoHuruf(List &kalimat, Stack &stackUndo, Stack &stackRedo);
-void undoHuruf(List &kalimat, Stack &stackUndo, Stack &stackRedo);
+void redoHuruf(ListHuruf &kalimat, Stack &stackUndo, Stack &stackRedo);
+void funcUndo(ListHuruf &L, Stack &stackUndo, Stack &stackRedo);
 
 #endif // HEADER_H_INCLUDED
