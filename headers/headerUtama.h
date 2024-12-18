@@ -28,7 +28,7 @@ struct Stack
     string cek[MAXSIZE];
     adrHuruf cursor[MAXSIZE];
     infotypeS info[MAXSIZE];
-    index top;
+    index top = 0;
 };
 
 typedef char infotypeQ;
@@ -55,9 +55,13 @@ adrHuruf createElm(char x);
 void insertUtama(ListHuruf &L, adrHuruf P, Stack &stackUndo);
 void insertFirst(ListHuruf &L, adrHuruf P);
 void insertBefore(ListHuruf &L, adrHuruf P, adrHuruf pred);
+void insertAfter(ListHuruf &L, adrHuruf P, adrHuruf pred);
+
 void deleteFirst(ListHuruf &L, adrHuruf P);
 void deleteLast(ListHuruf &L, adrHuruf P);
-void deleteBefore(ListHuruf &L, adrHuruf &P, adrHuruf pred);
+void deleteBefore(ListHuruf &L, adrHuruf &P, adrHuruf pred, Stack &stackUndo);
+void deletePointer(ListHuruf &L, adrHuruf &P, adrHuruf &pred);
+
 void printList(ListHuruf L);
 void printHuruf(ListHuruf L);
 adrHuruf cariCursor(ListHuruf L);
@@ -84,6 +88,11 @@ void redoHuruf(ListHuruf &kalimat, Stack &stackUndo, Stack &stackRedo);
 void undoHuruf(ListHuruf &L, Stack &stackUndo, Stack &stackRedo);
 void handleEnter(ListHuruf &L);
 void handleBackspace(ListHuruf &L);
-adrHuruf cariCursor(ListHuruf L) ;
+adrHuruf cariCursor(ListHuruf L);
+void debug(ListHuruf L);
+
+void findOnText(ListHuruf L);
+void stringToLL(ListHuruf &StringList, string text);
+void replaceText(ListHuruf &L, string text);
 
 #endif // HEADER_H_INCLUDED
