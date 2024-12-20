@@ -1,11 +1,7 @@
 #include <conio.h>
 #include <cstdlib>
+#include <windows.h>
 #include "headerUtama.h"
-
-// #include "functions\functionRedo.cpp"
-// #include "functions\primitiveQueue.cpp"
-// #include "functions\functionUndo.cpp"
-// #include "functions\primitiveStack.cpp"
 
 using namespace std;
 
@@ -33,7 +29,7 @@ int main()
         printList(L);  // Menampilkan list huruf
         cout << endl;
 
-        ch = getche(); // Membaca satu karakter tanpa menunggu Enter
+        ch = getch(); // Membaca satu karakter tanpa menunggu Enter
         cout << endl;
         // Menangani tombol ESC untuk keluar
         if (ch == 27)
@@ -52,12 +48,12 @@ int main()
                 cursorGeserKiri(L);
             }
             else if (ch == 72)
-            { // Panah atas (ASCII 72)
-              // Implementasi jika panah atas ditekan
+            {
+                cursorGeserAtas(L);
             }
             else if (ch == 80)
             { // Panah bawah (ASCII 80)
-              // Implementasi jika panah bawah ditekan
+                cursorGeserBawah(L);
             }
         }
         else if (ch == 13)
@@ -73,14 +69,20 @@ int main()
         { // Ctrl + Y untuk redo
             redoHuruf(L, stackUndo, stackRedo);
         }
-        else if (ch == 8)
-        {
-            deleteBefore(L, P, cariCursor(L), stackUndo);
-        }
         else if (ch == 24)
         {
             // find text (ctrl+x)
             findOnText(L);
+        }
+        else if (ch == 8)
+        { // backspace
+            deleteBefore(L, P, cariCursor(L), stackUndo);
+        }
+        else if (ch == 7)
+        { // Ctrl + G
+            system("cls");
+            showLegend();
+            getch();
         }
         else
         {
@@ -89,9 +91,10 @@ int main()
             cout << "Masuk else" << endl;
             insertUtama(L, P, stackUndo);
         }
-        // debug(L);
     }
 
+    setColor(6);
     cout << endl
-         << "=============== TERIMA KASIH ==============" << endl;
+         << "                                   -- TERIMA KASIH --                                   " << endl;
+    setColor(7);
 }

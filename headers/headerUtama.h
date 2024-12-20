@@ -2,17 +2,19 @@
 #define HEADER_H_INCLUDED
 
 #include <iostream>
+#include <windows.h>
 using namespace std;
 
 struct ElmHuruf;
 typedef ElmHuruf *adrHuruf;
 
-struct ElmHuruf
-{
+struct ElmHuruf {
     char huruf;
-    adrHuruf prev;
+    char prevChar; // Karakter asli sebelum menjadi kursor
     adrHuruf next;
+    adrHuruf prev;
 };
+
 
 struct ListHuruf
 {
@@ -48,10 +50,29 @@ struct Queue
     address tail;
 };
 
+struct ElmBaris;
+typedef ElmBaris *adrBaris;
+
+struct ElmBaris {
+    char baris;
+    char prevBar;
+    adrBaris next;
+    adrBaris prev;
+};
+
+struct ListBaris {
+    adrBaris first;
+    adrBaris last;
+};
+
 void tampilan();
-void printListSemua(ListHuruf L);
+void printList(ListHuruf L);
+void showLegend();
+void setColor(int color);
+
 void createList(ListHuruf &L);
 adrHuruf createElm(char x);
+
 void insertUtama(ListHuruf &L, adrHuruf P, Stack &stackUndo);
 void insertFirst(ListHuruf &L, adrHuruf P);
 void insertBefore(ListHuruf &L, adrHuruf P, adrHuruf pred);
@@ -62,11 +83,18 @@ void deleteLast(ListHuruf &L, adrHuruf P);
 void deleteBefore(ListHuruf &L, adrHuruf &P, adrHuruf pred, Stack &stackUndo);
 void deletePointer(ListHuruf &L, adrHuruf &P, adrHuruf &pred);
 
-void printList(ListHuruf L);
+void stringToLL(ListHuruf &StringList, string text);
+void findOnText(ListHuruf L);
+void replaceText(ListHuruf &L, string text);
+
 void printHuruf(ListHuruf L);
 adrHuruf cariCursor(ListHuruf L);
 void cursorGeserKiri(ListHuruf &L);
 void cursorGeserKanan(ListHuruf &L);
+void cursorGeserAtas(ListHuruf &L);
+void cursorGeserBawah(ListHuruf &L);
+int hitungSlashNNAIK(adrHuruf kursor);
+int hitungSlashNBAWAH(adrHuruf kursor);
 
 void createStack(Stack &S);
 bool isEmptyS(Stack S);
@@ -77,22 +105,9 @@ infotypeS peek(Stack S);
 int sizeS(Stack S);
 void printStack(Stack S);
 
-Queue createQueue(Queue Q);
-bool isEmptyQ(Queue Q);
-void enqueue(Queue &Q, address P);
-void dequeue(Queue &Q, address P);
-address front(Queue Q);
-infotypeQ sizeQ(Queue Q);
 
 void redoHuruf(ListHuruf &kalimat, Stack &stackUndo, Stack &stackRedo);
 void undoHuruf(ListHuruf &L, Stack &stackUndo, Stack &stackRedo);
-void handleEnter(ListHuruf &L);
-void handleBackspace(ListHuruf &L);
-adrHuruf cariCursor(ListHuruf L);
 void debug(ListHuruf L);
-
-void findOnText(ListHuruf L);
-void stringToLL(ListHuruf &StringList, string text);
-void replaceText(ListHuruf &L, string text);
 
 #endif // HEADER_H_INCLUDED

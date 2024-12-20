@@ -1,16 +1,85 @@
 #include "headerUtama.h"
-#include <conio.h>
 #include <iostream>
+#include <conio.h>
+#include <windows.h>
 using namespace std;
+
+void setColor(int color)
+{ // fungsi untuk merubah warna teks di cmd
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, color);
+}
 
 void tampilan()
 {
-    cout << "==============================================" << endl;
-    cout << "    Selamat datang di Unyil Kucrit Notepad!" << endl;
-    cout << "==============================================" << endl
+    cout << "======================================================================================" << endl;
+    setColor(3);
+    cout << "                       Selamat datang di Unyil Kucrit Notepad!                        " << endl;
+    setColor(7);
+    cout << "======================================================================================" << endl
          << endl
          << endl;
-    cout << "===== Klik apapun untuk memulai mengetik =====" << endl;
+    setColor(6);
+    cout << "                      -- Tekan apapun untuk memulai mengetik --                       " << endl;
+    setColor(7);
+}
+
+void showLegend()
+{
+    cout << "======================================================================================" << endl;
+    setColor(3);
+    cout << "                                  UNYIL KUCRIT NOTEPAD                                " << endl;
+    setColor(7);
+    cout << "======================================================================================" << endl;
+    setColor(6);
+    cout << "[Ctrl+Y]";
+    setColor(7);
+    cout << " untuk redo                                                ";
+    setColor(6);
+    cout << "[Ctrl+Z]";
+    setColor(7);
+    cout << " untuk undo" << endl;
+    setColor(6);
+    cout << "[ESC]";
+    setColor(7);
+    cout << " untuk keluar dari notepad                                    ";
+    setColor(6);
+    cout << "[Ctrl+X]";
+    setColor(7);
+    cout << " untuk find" << endl;
+    setColor(6);
+    cout << "[Arrow]";
+    setColor(7);
+    cout << " gunakan arrow untuk geser kursor          ";
+    setColor(6);
+    cout << "[Backspace]";
+    setColor(7);
+    cout << " untuk menghapus karakter" << endl;
+    setColor(6);
+    cout << "[Enter]";
+    setColor(7);
+    cout << " untuk membuat line baru                                                       " << endl;
+    cout << "======================================================================================" << endl;
+    setColor(6);
+    cout << "                         Tekan apapun untuk lanjut ke notepad                         " << endl;
+    setColor(7);
+}
+
+void printList(ListHuruf L)
+{
+    adrHuruf P = L.first;
+    cout << "======================================================================================" << endl;
+    setColor(3);
+    cout << "                                  UNYIL KUCRIT NOTEPAD                                " << endl;
+    setColor(7);
+    cout << "======================================================================================" << endl;
+    cout << "                        [Ctrl+G] untuk menampilkan shortcut menu                      " << endl
+         << endl;
+    while (P != nullptr)
+    {
+        cout << P->huruf; // Cetak huruf
+        P = P->next;
+    }
 }
 
 void cursorGeserKiri(ListHuruf &L)
@@ -33,19 +102,9 @@ void cursorGeserKiri(ListHuruf &L)
         {
             L.first = P; // Jika 'temp' adalah elemen pertama, perbarui pointer first
         }
-        cout << temp->prev->huruf << " Temp->prev sebelum" << endl; // Ubah prev untuk elemen sebelumnya agar mengarah ke kursor
-        adrHuruf kursor = cariCursor(L);
-        cout << "Address P: " << P << endl;
-        cout << "Address temp->prev->next: " << temp->prev->next << endl;
-        temp->prev = temp->prev->next;
-        cout << "Address temp->prev: " << temp->prev << endl;
-        cout << temp->prev->huruf << " Temp->prev sesudah" << endl; // Ubah prev untuk elemen sebelumnya agar mengarah ke kursor
-
+        temp->prev = P;
         temp->next = Pnext;
 
-        //        if (P->next != nullptr) {
-        //            P->next->prev = temp;  // Menghubungkan elemen setelah kursor dengan 'temp'
-        //        }
         if (Pnext != nullptr)
         {
             Pnext->prev = temp; // Jika ada elemen sebelum P, elemen tersebut mengarah ke temp
@@ -59,31 +118,6 @@ void cursorGeserKiri(ListHuruf &L)
 
 void cursorGeserKanan(ListHuruf &L)
 {
-    // adrHuruf P = cariCursor(L);
-    // if (P != nullptr && P->next != nullptr) {
-    //     char temp = P->next->huruf;
-    //     P->next->huruf = P->huruf;
-    //     P->huruf = temp;
-    // }
-    // adrHuruf P = cariCursor(L);
-    // if (P!= nullptr && P->prev != nullptr){
-    //     adrHuruf temp = P->next;
-    //     adrHuruf Pprev = P->prev;
-
-    //     P->next = temp->next;
-    //     P->prev = temp;
-
-    //     if (temp->next != nullptr){
-    //         temp->next->prev = P;
-    //     }else{
-    //         L.last = P;
-    //     }
-    //     temp->next = P;
-    //     temp->prev = Pprev;
-    //     if (P->prev != nullptr){
-    //         P->prev->next = temp;
-    //     }
-    // }
     adrHuruf P = cariCursor(L); // Temukan posisi kursor
     if (P != nullptr && P->next != nullptr)
     {                             // Pastikan ada elemen setelah kursor
@@ -104,8 +138,7 @@ void cursorGeserKanan(ListHuruf &L)
         }
 
         // Mengubah pointer temp untuk mengarah ke kursor
-        temp->next = P; // Temp sekarang menjadi elemen setelah kursor
-        cout << temp->next->huruf << "Kursor next pada geserKanan" << endl;
+        temp->next = P;     // Temp sekarang menjadi elemen setelah kursor
         temp->prev = Pprev; // Temp mengarah ke elemen sebelumnya kursor
 
         if (Pprev != nullptr)
@@ -117,6 +150,153 @@ void cursorGeserKanan(ListHuruf &L)
             L.first = temp; // Jika P adalah elemen pertama, update pointer first
         }
     }
+}
+
+void cursorGeserAtas(ListHuruf &L)
+{
+    adrHuruf P = cariCursor(L);
+    adrHuruf kursorTemp = P;
+    int ba, bc, jsn, slashN;
+    ba = 0;
+    bc = 0;
+    jsn = 0;
+    slashN = 0;
+    while (kursorTemp->prev != nullptr && kursorTemp != L.first && kursorTemp->prev->huruf != '\n')
+    {
+        kursorTemp = kursorTemp->prev;
+        bc++;
+    }
+    if (kursorTemp->prev != L.first && kursorTemp != L.first)
+    {
+        while (slashN < 2 && kursorTemp != L.first)
+        {
+            slashN += hitungSlashNNAIK(kursorTemp);
+            kursorTemp = kursorTemp->prev;
+            ba++;
+            cout << ""; // jangan dimatikan
+        }
+        if (kursorTemp != L.first)
+        {
+            ba--;
+        }
+        if (ba <= bc)
+        {
+            adrHuruf PK;
+            PK = cariCursor(L);
+            while (PK->prev->huruf != '\n')
+            {
+                cursorGeserKiri(L);
+                PK = cariCursor(L);
+            }
+            cursorGeserKiri(L);
+        }
+        else
+        {
+            for (int a = 0; a < ba; a++)
+            {
+                cursorGeserKiri(L);
+            }
+        }
+    }
+}
+
+void cursorGeserBawah(ListHuruf &L)
+{
+    adrHuruf P = cariCursor(L);
+    adrHuruf kursorTemp = P;
+    adrHuruf tempBawah;
+    int bac = 0, bfc = 0, bb = 0, i = 0, slashN = 0;
+
+    // hitung kebelakang
+    while (kursorTemp->prev != nullptr && kursorTemp != L.first && kursorTemp->prev->huruf != '\n')
+    {
+        kursorTemp = kursorTemp->prev;
+        bfc++;
+    }
+    kursorTemp = P;
+    if (kursorTemp->next != nullptr)
+    {
+        while (kursorTemp->huruf != '\n' && kursorTemp != L.last)
+        {
+            kursorTemp = kursorTemp->next;
+            bac++;
+        }
+        int checkBawah = 0;
+        while (kursorTemp != L.last && checkBawah < 1)
+        {
+            kursorTemp = kursorTemp->next;
+            if (kursorTemp->huruf == '\n')
+            {
+                checkBawah++;
+            }
+            bb++;
+        }
+        tempBawah = kursorTemp;
+        kursorTemp = P;
+        if (bfc > bb)
+        {
+            while (kursorTemp->huruf != '\n' && kursorTemp->next != nullptr && kursorTemp != nullptr)
+            {
+                kursorTemp = kursorTemp->next;
+                cursorGeserKanan(L);
+            }
+            if (tempBawah->huruf == '\n')
+            {
+                for (int a = 0; a < bb - 1; a++)
+                {
+                    cursorGeserKanan(L);
+                }
+            }
+            else
+            {
+                for (int a = 0; a < bb; a++)
+                {
+                    cursorGeserKanan(L);
+                }
+            }
+        }
+        else
+        {
+            if (kursorTemp != L.last && kursorTemp->next != nullptr && kursorTemp != nullptr)
+            {
+                int nCheck = 0;
+                for (int a = 0; a < bfc + bac && nCheck < 2; a++)
+                {
+                    cursorGeserKanan(L);
+                    adrHuruf cursorCheck = cariCursor(L);
+                    if (cursorCheck != NULL && cursorCheck->next != NULL && cursorCheck->next->huruf == '\n')
+                    {
+                        nCheck++;
+                    }
+                }
+            }
+        }
+    }
+}
+
+int hitungSlashNNAIK(adrHuruf kursor)
+{
+    int jsn = 0;
+    if (kursor->prev->huruf == '\n')
+    {
+        jsn++;
+    }
+    return jsn;
+}
+
+int hitungSlashNBAWAH(adrHuruf kursor)
+{
+    int jsn = 0;
+    if (kursor->next->huruf == '\n')
+    {
+        jsn++;
+    }
+    return jsn;
+}
+
+void pindahCursor(ListHuruf &L)
+{
+    adrHuruf P = cariCursor(L);
 }
 
 void createList(ListHuruf &L)
@@ -169,7 +349,6 @@ void insertUtama(ListHuruf &L, adrHuruf P, Stack &stackUndo)
         insertBefore(L, P, kursor);
     }
     push(stackUndo, P->huruf, "Insert", P);
-    // cout << kursor << endl;
 }
 
 void insertFirst(ListHuruf &L, adrHuruf P)
@@ -213,31 +392,6 @@ void insertBefore(ListHuruf &L, adrHuruf P, adrHuruf pred)
         L.first = P; // P menjadi elemen pertama
     }
     pred->prev = P; // Kursor (pred) harus menunjuk ke P
-}
-
-void printList(ListHuruf L)
-{
-    adrHuruf P = L.first;
-    cout << "===========================================" << endl;
-    cout << "            UNYIL KUCRIT NOTEPAD       " << endl;
-    cout << "===========================================" << endl;
-    cout << "Note: Klik Escape untuk keluar dari notepad" << endl
-         << endl;
-    adrHuruf X = cariCursor(L);
-    if (X->prev != nullptr)
-    {
-        cout << "Kursor prev di printlist " << X->prev->huruf << endl;
-    }
-
-    while (P != nullptr)
-    {
-        if (P->huruf == '\n')
-        {
-            // cout << endl;
-        }
-        cout << P->huruf; // Cetak huruf
-        P = P->next;
-    }
 }
 
 void deleteFirst(ListHuruf &L, adrHuruf &P)
@@ -289,10 +443,6 @@ void deleteBefore(ListHuruf &L, adrHuruf &P, adrHuruf pred, Stack &stackUndo)
         push(stackUndo, P->huruf, "Delete", P);
     }
 }
-
-// char temp = P->prev->huruf;
-// P->prev->huruf = P->huruf;
-// P->huruf = temp;
 
 void deletePointer(ListHuruf &L, adrHuruf &P, adrHuruf &pred)
 {
@@ -379,16 +529,6 @@ void undoHuruf(ListHuruf &L, Stack &stackUndo, Stack &stackRedo)
                 deletePointer(L, P, cursorUndo);
                 cout << "P: " << P << " " << P->huruf << endl;
             }
-
-            // if (cursorList == cursorUndo){
-            //     deleteBefore(L, P, cursorList);
-            // }else{
-            //     // cout << cursorUndo->next << " " << cursorUndo->next->huruf << endl;
-            //     // deleteBefore(L, P, cursorUndo);
-            //     // adrHuruf temp = cursorUndo->prev;
-            //     deletePointer(L, P, cursorUndo);
-
-            // }
         }
         else if (check == "Delete")
         {
@@ -413,8 +553,6 @@ void undoHuruf(ListHuruf &L, Stack &stackUndo, Stack &stackRedo)
                 L.last->next = cursorUndo;
                 L.last = cursorUndo;
             }
-
-            // insertUtama(L, createElm(huruf), stackUndo);
         }
     }
 }
@@ -480,7 +618,6 @@ void debug(ListHuruf L)
     {
         if (P->huruf == '\n')
         {
-            // cout << endl;
         }
         if (P->prev != nullptr && P->next != nullptr)
         {
@@ -562,9 +699,7 @@ void findOnText(ListHuruf L)
     int totalFind = 0;
     int LCounter = 0;
     int findCounter = 0;
-    // bool check = false;
 
-    // insert kata/kalimat
     cout << "Cari kata/kalimat pada text editor: ";
     cin >> text;
     createList(findText);
@@ -611,26 +746,18 @@ void findOnText(ListHuruf L)
         cout << "sebanyak " << totalFind << " '" << text << "' ditemukan pada text" << endl;
     }
     char ch;
-    cout << "Press Enter to continue typing or Press Ctrl+G to replace!" << endl;
-    while (true)
+    cout << endl;
+    cout << "Tekan Apapun untuk lanjut mengetik" << endl;
+    cout << "Tekan ";
+    setColor(6);
+    cout << "[Ctrl+H]";
+    setColor(7);
+    cout << " untuk replace" << endl;
+    ch = getch();
+    if (ch == 8)
     {
-        ch = getch();
-        cout << int(ch) << endl;
-        if (ch == 13)
-        {
-            break;
-        }
-        else if (ch == 8)
-        {
-            replaceText(L, text);
-            break;
-        }
-        else
-        {
-            cout << "Invalid input. Press Enter or Ctrl+G!" << endl;
-        }
+        replaceText(L, text);
     }
-    // replaceText(L, text);
 }
 
 void replaceText(ListHuruf &L, string text)
@@ -645,9 +772,10 @@ void replaceText(ListHuruf &L, string text)
 
     createList(findText);
     stringToLL(findText, text);
-
+    cout << endl;
     cout << "Replace menjadi: ";
     cin >> rText;
+
     // navigasi searching
     LNav = L.first;
     LNavTemp = L.first;
@@ -689,8 +817,6 @@ void replaceText(ListHuruf &L, string text)
             // menambah karakter apabila yang ingin di replace lebih pendek hurufnya
             if (findCounter < rText.length())
             {
-                cout << "LINE 324" << endl;
-
                 for (i = findCounter; i < rText.length(); i++)
                 {
                     adrHuruf X;
